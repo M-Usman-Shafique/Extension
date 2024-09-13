@@ -21,6 +21,22 @@ export default function App() {
     });
   };
 
+  const resetColor = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        { action: "resetColor" },
+        (response) => {
+          if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError);
+          } else if (response && response.success) {
+            console.log("Colors reset successfully");
+          }
+        }
+      );
+    });
+  };
+
   return (
     <div className="p-4 bg-gray-900 rounded-lg w-[300px] h-[200px] shadow-lg">
       <h1 className="text-2xl font-bold mb-4 text-white text-center">Color Changer</h1>
@@ -37,6 +53,12 @@ export default function App() {
         className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded w-full"
       >
         Change Color
+      </button>
+      <button 
+        onClick={resetColor}
+        className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-6 rounded w-full"
+      >
+        Reset Color
       </button>
     </div>
   )
