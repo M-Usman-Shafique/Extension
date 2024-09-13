@@ -1,0 +1,3 @@
+I made a basic webpage bg color changer app using React.JS (vite):
+
+On clicking the change color button after selecting a color the bg color successfully changes but after page reload the selected bg color again disappeared why?

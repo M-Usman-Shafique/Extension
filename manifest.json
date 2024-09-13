@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Nerd Mode",
+  "version": "1.0.0",
+  "description": "Change the background color of web pages",
+  "author": "hafizusmanshafiq@gmail.com",
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "nerd.png",
+      "48": "nerd.png",
+      "128": "nerd.png"
+    }
+  },
+  "icons": {
+    "16": "nerd.png",
+    "48": "nerd.png",
+    "128": "nerd.png"
+  },
+  "permissions": ["activeTab", "storage"],
+  "background": {
+    "service_worker": "src/background.jsx",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content.jsx"]
+    }
+  ]
+}

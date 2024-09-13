@@ -1,0 +1,13 @@
+.picker {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+.picker::-webkit-color-swatch {
+  border-radius: 50%;
+  border: 3px solid rgb(211, 183, 147);
+}
+.picker::-moz-color-swatch {
+  border-radius: 50%;
+  border: 3px solid rgb(211, 183, 147);
+}
