@@ -1,3 +1,10 @@
-I made a basic webpage bg color changer app using React.JS (vite):
+I made a basic webpage bg color changer chrome extension using React.JS (vite):
 
-On clicking the change color button after selecting a color the bg color successfully changes but after page reload the selected bg color again disappeared why?
+On clicking the apply button after selecting a color from color picker, the selected bg color is successfully applying and it also saves in the chrome storage so that the applied bg color remains intact after page refresh. And on clicking the "reset" button the applied bg color successfully removed & chrome storage is also cleared.
+Now I want to add enable/disable feature with following requirements: :
+1. When extension is enabled only then the input color picker & apply/reset buttons should be displayed and bg color selected from the color picker or stored in the chrome storage should be applied.
+2. When extension is disabled then the input color picker & apply/reset buttons should not be displayed and bg color selected from the color picker or stored in the chrome storage should not be applied.
+3. To toggle enable/disable functionality I made a customized switches component having these features:
+a. By default the position is unchecked/light mode/sun svg icon.
+b. On toggle the switch, the position becomes checked/dark mode/moon svg icon.
+Now your task is to first add the enable/disable functionality in the extension & then link the enabled state with checked position of toggle switch and link the disabled state with unchecked position of toggle switch.
