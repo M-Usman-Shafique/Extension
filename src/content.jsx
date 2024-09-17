@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // src/content.jsx
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "changeColor") {

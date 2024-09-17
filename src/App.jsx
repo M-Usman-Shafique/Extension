@@ -1,5 +1,6 @@
+/* eslint-disable no-undef */
 // src/App.jsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import CustomizedSwitches from "./components/CustomizedSwitches";
 
@@ -7,7 +8,8 @@ export default function App() {
   const [color, setColor] = useState("#ffffff");
   const [isEnabled, setIsEnabled] = useState(true);
 
-  const isChromeExtension = typeof chrome !== "undefined" && chrome.storage;
+  const isChromeExtension =
+    typeof chrome !== "undefined" && chrome.storage;
 
   useEffect(() => {
     if (isChromeExtension) {
@@ -22,11 +24,20 @@ export default function App() {
       // Get the stored background color and apply it if enabled
       chrome.storage.local.get("backgroundColor", (result) => {
         if (result.backgroundColor && isEnabled) {
-          changeBackgroundColor(result.backgroundColor);
+          // Trigger the content script to apply the color
+          chrome.tabs.query(
+            { active: true, currentWindow: true },
+            (tabs) => {
+              chrome.tabs.sendMessage(tabs[0].id, {
+                action: "changeColor",
+                color: result.backgroundColor,
+              });
+            }
+          );
         }
       });
     }
-  }, [isEnabled]);
+  }, [isChromeExtension, isEnabled]);
 
   const changeColor = () => {
     if (!isEnabled) return;
@@ -48,8 +59,6 @@ export default function App() {
   };
 
   const resetColor = () => {
-    // if (!isEnabled) return;
-
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       chrome.tabs.sendMessage(
         tabs[0].id,
