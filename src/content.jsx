@@ -44,10 +44,10 @@ function changeBackgroundColor(color) {
   });
 
   // Explicitly set the background color for inputs and textareas
-  const inputs = document.querySelectorAll("input, textarea, select");
-  inputs.forEach((input) => {
-    input.style.backgroundColor = color;
-  });
+  // const inputs = document.querySelectorAll("input, textarea, select");
+  // inputs.forEach((input) => {
+  //   input.style.backgroundColor = color;
+  // });
 }
 
 function disableBackgroundColor() {
