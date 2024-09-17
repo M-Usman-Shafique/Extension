@@ -40,11 +40,7 @@ function changeBackgroundColor(color) {
   // Loop through all elements and apply the background color
   const allElements = document.querySelectorAll("*");
   allElements.forEach((el) => {
-    // Apply the color only if the element has no custom background color defined
-    const currentColor = getComputedStyle(el).backgroundColor;
-    if (currentColor === "rgba(0, 0, 0, 0)" || currentColor === "transparent") {
-      el.style.backgroundColor = color;
-    }
+    el.style.backgroundColor = color;
   });
 
   // Explicitly set the background color for inputs and textareas
