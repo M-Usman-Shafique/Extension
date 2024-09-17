@@ -8,8 +8,7 @@ export default function App() {
   const [color, setColor] = useState("#ffffff");
   const [isEnabled, setIsEnabled] = useState(true);
 
-  const isChromeExtension =
-    typeof chrome !== "undefined" && chrome.storage;
+  const isChromeExtension = typeof chrome !== "undefined" && chrome.storage;
 
   useEffect(() => {
     if (isChromeExtension) {
@@ -25,15 +24,12 @@ export default function App() {
       chrome.storage.local.get("backgroundColor", (result) => {
         if (result.backgroundColor && isEnabled) {
           // Trigger the content script to apply the color
-          chrome.tabs.query(
-            { active: true, currentWindow: true },
-            (tabs) => {
-              chrome.tabs.sendMessage(tabs[0].id, {
-                action: "changeColor",
-                color: result.backgroundColor,
-              });
-            }
-          );
+          chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.tabs.sendMessage(tabs[0].id, {
+              action: "changeColor",
+              color: result.backgroundColor,
+            });
+          });
         }
       });
     }
@@ -42,26 +38,30 @@ export default function App() {
   const changeColor = () => {
     if (!isEnabled) return;
 
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(
-        tabs[0].id,
-        { action: "changeColor", color: color },
-        (response) => {
-          if (chrome.runtime.lastError) {
-            console.error(chrome.runtime.lastError);
-          } else if (response && response.success) {
-            console.log("Color changed successfully");
-            chrome.storage.local.set({ backgroundColor: color });
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach((tab) => {
+        chrome.tabs.sendMessage(
+          tab.id,
+          { action: "changeColor", color: color },
+          (response) => {
+            if (chrome.runtime.lastError) {
+              console.error(chrome.runtime.lastError);
+            } else if (response && response.success) {
+              console.log("Color changed successfully");
+              chrome.storage.local.set({ backgroundColor: color });
+            }
           }
-        }
-      );
+        );
+      });
     });
   };
 
   const resetColor = () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(
-        tabs[0].id,
+    // Query all open tabs and send the reset message to all of them
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach((tab) => {
+        chrome.tabs.sendMessage(
+          tab.id,
         { action: "resetColor" },
         (response) => {
           if (chrome.runtime.lastError) {
@@ -73,28 +73,33 @@ export default function App() {
         }
       );
     });
-  };
+  });
+}
 
   const handleToggle = (checked) => {
     setIsEnabled(checked);
     chrome.storage.local.set({ isEnabled: checked });
 
-    // Immediately apply or stop applying color when toggling
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (checked) {
-        chrome.storage.local.get("backgroundColor", (result) => {
-          if (result.backgroundColor) {
-            chrome.tabs.sendMessage(tabs[0].id, {
+     // Query all open tabs and apply or disable the background color based on the toggle state
+  chrome.tabs.query({}, (tabs) => {
+    if (checked) {
+      chrome.storage.local.get("backgroundColor", (result) => {
+        if (result.backgroundColor) {
+          tabs.forEach((tab) => {
+            chrome.tabs.sendMessage(tab.id, {
               action: "changeColor",
               color: result.backgroundColor,
             });
-          }
-        });
-      } else {
-        chrome.tabs.sendMessage(tabs[0].id, { action: "disableColor" });
-      }
-    });
-  };
+          });
+        }
+      });
+    } else {
+      tabs.forEach((tab) => {
+        chrome.tabs.sendMessage(tab.id, { action: "disableColor" });
+      });
+    }
+  });
+};
 
   return (
     <div className="px-4 pb-4 bg-gray-900 rounded-lg w-[300px] h-[200px] shadow-lg">
