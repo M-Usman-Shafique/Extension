@@ -150,7 +150,7 @@ export default function App() {
         {isEnabled && (
           <button
             onClick={resetColors}
-            className="hover:bg-slate-800 group font-bold p-2 rounded-full"
+            className="hover:bg-gray-800 group font-bold p-2 rounded-full"
           >
             <GrPowerReset
               className={`text-slate-500 group-hover:text-slate-400 text-lg ${
