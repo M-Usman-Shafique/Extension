@@ -1,13 +1,15 @@
 /* eslint-disable no-undef */
 // src/App.jsx
 import { useEffect, useState } from "react";
+import { GrPowerReset } from "react-icons/gr";
 import "./App.css";
 import CustomizedSwitches from "./components/CustomizedSwitches";
 
 export default function App() {
-  const [bgColor, setBgColor] = useState("#ffffff");
+  const [bgColor, setBgColor] = useState("#000000");
   const [textColor, setTextColor] = useState("#000000");
   const [isEnabled, setIsEnabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const isChromeExtension = typeof chrome !== "undefined" && chrome.storage;
 
@@ -88,7 +90,7 @@ export default function App() {
   };
 
   const resetColors = () => {
-    // Query all open tabs and send the reset message to all of them
+    setIsLoading(true);
     chrome.tabs.query({}, (tabs) => {
       tabs.forEach((tab) => {
         chrome.tabs.sendMessage(
@@ -98,8 +100,9 @@ export default function App() {
             if (chrome.runtime.lastError) {
               console.error(chrome.runtime.lastError);
             } else if (response && response.success) {
-              console.log("Colors reset successfully");
               chrome.storage.local.remove(["backgroundColor", "textColor"]);
+              console.log("Colors reset successfully");
+              setIsLoading(false);
             }
           }
         );
@@ -142,15 +145,27 @@ export default function App() {
 
   return (
     <div className="px-4 pb-4 bg-gray-900 rounded-lg w-[300px] h-[200px] shadow-lg">
-      <div className="flex justify-center items-center">
+      <div className="flex justify-between items-center">
         <CustomizedSwitches isEnabled={isEnabled} onToggle={handleToggle} />
+        {isEnabled && (
+          <button
+            onClick={resetColors}
+            className="hover:bg-slate-800 group font-bold p-2 rounded-full"
+          >
+            <GrPowerReset
+              className={`text-slate-500 group-hover:text-slate-400 text-lg ${
+                isLoading ? "animate-spin" : ""
+              }`}
+            />
+          </button>
+        )}
       </div>
       {isEnabled && (
         <>
-          <h1 className="text-2xl font-bold mb-4 text-white text-center">
+          <h1 className="text-lg font-bold mb-4 text-white text-center">
             Color Changer
           </h1>
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center gap-3 mb-4">
             <input
               type="color"
               value={bgColor}
@@ -159,10 +174,8 @@ export default function App() {
                 setBgColor(selectedColor);
                 changeBgColor(selectedColor);
               }}
-              className="picker bg-transparent cursor-pointer border-none w-16 h-16 rounded-full"
+              className="picker bg-transparent cursor-pointer border-none w-12 h-12 rounded-full"
             />
-          </div>
-          <div className="flex justify-center mb-4">
             <input
               type="color"
               value={textColor}
@@ -171,16 +184,8 @@ export default function App() {
                 setTextColor(selectedColor);
                 changeTextColor(selectedColor);
               }}
-              className="picker bg-transparent cursor-pointer border-none w-16 h-16 rounded-full"
+              className="picker bg-transparent cursor-pointer border-none w-12 h-12 rounded-full"
             />
-          </div>
-          <div className="flex items-center justify-between gap-2">
-            <button
-              onClick={resetColors}
-              className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-6 rounded w-full"
-            >
-              Reset
-            </button>
           </div>
         </>
       )}

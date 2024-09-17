@@ -1,8 +1,8 @@
 // src/components/CustomizedSwitch
-import * as React from "react";
 import { styled } from "@mui/material/styles";
 import FormGroup from "@mui/material/FormGroup";
 import Switch from "@mui/material/Switch";
+import PropTypes from 'prop-types';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -63,7 +63,6 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 export default function CustomizedSwitches({ isEnabled, onToggle }) {
   return (
     <FormGroup>
-      control=
       {
         <MaterialUISwitch
           sx={{ m: 1 }}
@@ -74,3 +73,8 @@ export default function CustomizedSwitches({ isEnabled, onToggle }) {
     </FormGroup>
   );
 }
+
+CustomizedSwitches.propTypes = {
+  isEnabled: PropTypes.bool.isRequired,
+  onToggle: PropTypes.func.isRequired,
+};

@@ -39,16 +39,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 // On page load, get the stored background color and apply it
-chrome.storage.local.get(["backgroundColor", "textColor", "isEnabled"], (result) => {
-  if (result.isEnabled) {
-    if (result.backgroundColor) changeBackgroundColor(result.backgroundColor);
-    if (result.textColor) changeTextColor(result.textColor);
+chrome.storage.local.get(
+  ["backgroundColor", "textColor", "isEnabled"],
+  (result) => {
+    if (result.isEnabled) {
+      if (result.backgroundColor) changeBackgroundColor(result.backgroundColor);
+      if (result.textColor) changeTextColor(result.textColor);
+    }
   }
-});
+);
 
 // Function to change background color of all elements
 function changeBackgroundColor(bgColor) {
-
   // Loop through all elements and apply the background color
   const allElements = document.querySelectorAll("*");
   allElements.forEach((el) => {
@@ -64,7 +66,6 @@ function changeTextColor(textColor) {
 }
 
 function disableColors() {
-
   // Loop through all elements and remove the background color
   const allElements = document.querySelectorAll("*");
   allElements.forEach((el) => {
