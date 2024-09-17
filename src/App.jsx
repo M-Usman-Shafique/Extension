@@ -5,7 +5,7 @@ import "./App.css";
 import CustomizedSwitches from "./components/CustomizedSwitches";
 
 export default function App() {
-  const [color, setColor] = useState("#ffffff");
+  const [bgColor, setBgColor] = useState("#ffffff");
   const [isEnabled, setIsEnabled] = useState(true);
 
   const isChromeExtension = typeof chrome !== "undefined" && chrome.storage;
@@ -26,8 +26,8 @@ export default function App() {
           // Trigger the content script to apply the color
           chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             chrome.tabs.sendMessage(tabs[0].id, {
-              action: "changeColor",
-              color: result.backgroundColor,
+              action: "changeBgColor",
+              bgColor: result.backgroundColor,
             });
           });
         }
@@ -35,20 +35,20 @@ export default function App() {
     }
   }, [isChromeExtension, isEnabled]);
 
-  const changeColor = () => {
+  const changeBgColor = () => {
     if (!isEnabled) return;
 
     chrome.tabs.query({}, (tabs) => {
       tabs.forEach((tab) => {
         chrome.tabs.sendMessage(
           tab.id,
-          { action: "changeColor", color: color },
+          { action: "changeBgColor", bgColor: bgColor },
           (response) => {
             if (chrome.runtime.lastError) {
               console.error(chrome.runtime.lastError);
             } else if (response && response.success) {
-              console.log("Color changed successfully");
-              chrome.storage.local.set({ backgroundColor: color });
+              console.log("Bg color changed successfully");
+              chrome.storage.local.set({ backgroundColor: bgColor });
             }
           }
         );
@@ -56,18 +56,18 @@ export default function App() {
     });
   };
 
-  const resetColor = () => {
+  const resetBgColor = () => {
     // Query all open tabs and send the reset message to all of them
     chrome.tabs.query({}, (tabs) => {
       tabs.forEach((tab) => {
         chrome.tabs.sendMessage(
           tab.id,
-        { action: "resetColor" },
+        { action: "resetBgColor" },
         (response) => {
           if (chrome.runtime.lastError) {
             console.error(chrome.runtime.lastError);
           } else if (response && response.success) {
-            console.log("Colors reset successfully");
+            console.log("Bg colors reset successfully");
             chrome.storage.local.remove("backgroundColor");
           }
         }
@@ -87,15 +87,15 @@ export default function App() {
         if (result.backgroundColor) {
           tabs.forEach((tab) => {
             chrome.tabs.sendMessage(tab.id, {
-              action: "changeColor",
-              color: result.backgroundColor,
+              action: "changeBgColor",
+              bgColor: result.backgroundColor,
             });
           });
         }
       });
     } else {
       tabs.forEach((tab) => {
-        chrome.tabs.sendMessage(tab.id, { action: "disableColor" });
+        chrome.tabs.sendMessage(tab.id, { action: "disableBgColor" });
       });
     }
   });
@@ -114,20 +114,20 @@ export default function App() {
           <div className="flex justify-center mb-4">
             <input
               type="color"
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
+              value={bgColor}
+              onChange={(e) => setBgColor(e.target.value)}
               className="picker bg-transparent cursor-pointer border-none w-16 h-16 rounded-full"
             />
           </div>
           <div className="flex items-center justify-between gap-2">
             <button
-              onClick={changeColor}
+              onClick={changeBgColor}
               className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded w-full"
             >
               Apply
             </button>
             <button
-              onClick={resetColor}
+              onClick={resetBgColor}
               className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-6 rounded w-full"
             >
               Reset
