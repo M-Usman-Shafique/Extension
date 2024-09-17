@@ -1,15 +1,19 @@
 /* eslint-disable no-undef */
 // src/App.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { GrPowerReset } from "react-icons/gr";
 import "./App.css";
 import CustomizedSwitches from "./components/CustomizedSwitches";
+import { CiText } from "react-icons/ci";
+import { IoColorPaletteOutline } from "react-icons/io5";
 
 export default function App() {
   const [bgColor, setBgColor] = useState("#000000");
   const [textColor, setTextColor] = useState("#000000");
   const [isEnabled, setIsEnabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const bgColorPickerRef = useRef(null);
+  const textColorPickerRef = useRef(null);
 
   const isChromeExtension = typeof chrome !== "undefined" && chrome.storage;
 
@@ -161,33 +165,46 @@ export default function App() {
         )}
       </div>
       {isEnabled && (
-        <>
-          <h1 className="text-lg font-bold mb-4 text-white text-center">
-            Color Changer
-          </h1>
-          <div className="flex justify-center gap-3 mb-4">
+        <div className="flex justify-center gap-3 mb-4">
+          <div className="relative">
+            <div
+              onClick={() => bgColorPickerRef.current.click()}
+              className="w-12 h-12 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 p-2 rounded-full flex items-center justify-center"
+            >
+              <IoColorPaletteOutline className="text-4xl text-white cursor-pointer" />
+            </div>
             <input
               type="color"
+              ref={bgColorPickerRef}
               value={bgColor}
               onChange={(e) => {
                 const selectedColor = e.target.value;
                 setBgColor(selectedColor);
                 changeBgColor(selectedColor);
               }}
-              className="picker bg-transparent cursor-pointer border-none w-12 h-12 rounded-full"
+              className="hidden"
             />
+          </div>
+          <div className="relative">
+            <div
+              onClick={() => textColorPickerRef.current.click()}
+              className="w-12 h-12 bg-gradient-to-r from-green-400 via-blue-500 to-purple-500 p-2 rounded-full flex items-center justify-center"
+            >
+              <CiText className="text-4xl text-white cursor-pointer" />
+            </div>
             <input
               type="color"
+              ref={textColorPickerRef}
               value={textColor}
               onChange={(e) => {
                 const selectedColor = e.target.value;
                 setTextColor(selectedColor);
                 changeTextColor(selectedColor);
               }}
-              className="picker bg-transparent cursor-pointer border-none w-12 h-12 rounded-full"
+              className="hidden"
             />
           </div>
-        </>
+        </div>
       )}
     </div>
   );
