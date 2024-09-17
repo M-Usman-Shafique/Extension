@@ -35,7 +35,7 @@ export default function App() {
     }
   }, [isChromeExtension, isEnabled]);
 
-  const changeBgColor = () => {
+  const changeBgColor = (bgColor) => {
     if (!isEnabled) return;
 
     chrome.tabs.query({}, (tabs) => {
@@ -115,17 +115,21 @@ export default function App() {
             <input
               type="color"
               value={bgColor}
-              onChange={(e) => setBgColor(e.target.value)}
+              onChange={(e) => {
+                const selectedColor = e.target.value;
+                setBgColor(selectedColor);
+                changeBgColor(selectedColor);
+              }}
               className="picker bg-transparent cursor-pointer border-none w-16 h-16 rounded-full"
             />
           </div>
           <div className="flex items-center justify-between gap-2">
-            <button
+            {/* <button
               onClick={changeBgColor}
               className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded w-full"
             >
               Apply
-            </button>
+            </button> */}
             <button
               onClick={resetBgColor}
               className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-6 rounded w-full"
