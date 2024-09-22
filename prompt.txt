@@ -1,3 +1,47 @@
-I made a basic webpage bg color changer chrome extension using React.JS (vite):
+I'm building a webpage bg color changer chrome extension using React.JS (vite). On selecting a color from bg color picker, the color of all the elements of a webpage changes including video thumbnails causing them to become invisible for the audience like at facebook, youtube etc. How to fix this issue?
+I already have tried the following methods:
+1. Selecting All HTML Elements & then filtering out the media related elements:
+function changeBackgroundColor(bgColor) {
+  // Select all elements on the page
+  const allElements = document.querySelectorAll("*");
 
-At the first attempt, when I click the apply button after selecting a color from color picker, the bg color of webpage instantly changes. But when I select another color from the color picker & click the apply button, the bg color of webpage doesn't change instantly. Rather I have to reload the page to make the changes happen. Why is so? Why on the first time, the changes apply instantly without any need to reload the page. But on each subsequent attempt, why it needs a reload to apply the changes?
+  // Convert NodeList to an array
+  const allElementsArray = Array.from(allElements);
+
+  // Find media elements and their parents
+  const mediaElements = Array.from(
+    document.querySelectorAll("img, iframe, video, picture, source, canvas, embed, object")
+  );
+
+  // Create a set of all media elements and their parents to exclude
+  const elementsToExclude = new Set(
+    mediaElements.flatMap((mediaElement) => [mediaElement, mediaElement.parentElement])
+  );
+
+  // Filter out media elements and their parents
+  const filteredElements = allElementsArray.filter(
+    (el) => !elementsToExclude.has(el)
+  );
+
+  // Debugging: log the filtered elements (optional)
+  console.log("Filtered Elements: ", filteredElements);
+
+  // Loop through the filtered elements and apply the background color
+  filteredElements.forEach((el) => {
+    el.style.backgroundColor = bgColor;
+  });
+}
+
+Problem: in this approach, on applying the bg color, color of every element of the webpage changes including media related elements as well.
+
+2. Selecting specific elements by manually mentioning their tag names:
+function changeBackgroundColor(bgColor) {
+  const allElements = document.querySelectorAll(
+    "body, html, div, p, span, h1, h2, h3, h4, h5, h6, br, tr, abbr, address, audio, source, aside, main, article, b, base, blockquote, caption, data, details, dialog, dl, dt, fieldset, embed, section, table, tbody, th, td, tfoot, thead, title, ul, ol, ui, form, label, input, textarea, select, optgroup, option, a, link, button, nav, menu, mark, header, footer, ytd-mini-guide-renderer"
+  );
+  allElements.forEach((el) => {
+    el.style.backgroundColor = bgColor;
+  });
+}
+Problem: on using this approach the media related elements (images, videos, thumbnails) remain excluded from bg color application but the bg color some non-media elements also remain unchanged. Moreover, this approach work very strangely. It behaves different on different websites. Similarly it starts behaving differently when a webpage is reloaded.
+Fix the issue.. And used a seamless approach that works consistently on all the webpages excluding media related elements (images, videos, thumbnails etc.) from being effected by the bg color. Here's the basic files of my extension:

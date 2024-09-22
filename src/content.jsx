@@ -49,12 +49,39 @@ chrome.storage.local.get(
   }
 );
 
-// Function to change background color of all elements
 function changeBackgroundColor(bgColor) {
-  // Loop through all elements and apply the background color
+  // Select all elements on the page
   const allElements = document.querySelectorAll("*");
+
+  // Select media elements that we want to exclude
+  const mediaElements = document.querySelectorAll(
+    "img, video, iframe, canvas, embed, object, picture, audio"
+  );
+
+  // Create a set of elements to exclude: media elements and their parents
+  const excludedElements = new Set();
+
+  // Add media elements and their parents to the set
+  mediaElements.forEach((mediaElement) => {
+    excludedElements.add(mediaElement); // Exclude the media element itself
+    if (mediaElement.parentElement) {
+      excludedElements.add(mediaElement.parentElement); // Exclude its parent container
+    }
+  });
+
+  // Apply background color to all elements except those in the excluded set
   allElements.forEach((el) => {
-    el.style.backgroundColor = bgColor;
+    // Get the computed style of the element to check visibility
+    const style = window.getComputedStyle(el);
+
+    // Apply background color if the element is visible and not in the excluded set
+    if (
+      style.display !== "none" && // Exclude hidden elements
+      style.visibility !== "hidden" && // Exclude invisible elements
+      !excludedElements.has(el) // Exclude media and their parent containers
+    ) {
+      el.style.backgroundColor = bgColor;
+    }
   });
 }
 
