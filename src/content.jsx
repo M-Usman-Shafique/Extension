@@ -55,7 +55,7 @@ function changeBackgroundColor(bgColor) {
 
   // Select media elements that we want to exclude
   const mediaElements = document.querySelectorAll(
-    "img, video, iframe, canvas, embed, object, picture, audio"
+    "img, video, iframe, canvas, object, picture"
   );
 
   // Create a set of elements to exclude: media elements and their parents
@@ -71,17 +71,7 @@ function changeBackgroundColor(bgColor) {
 
   // Apply background color to all elements except those in the excluded set
   allElements.forEach((el) => {
-    // Get the computed style of the element to check visibility
-    const style = window.getComputedStyle(el);
-
-    // Apply background color if the element is visible and not in the excluded set
-    if (
-      style.display !== "none" && // Exclude hidden elements
-      style.visibility !== "hidden" && // Exclude invisible elements
-      !excludedElements.has(el) // Exclude media and their parent containers
-    ) {
       el.style.backgroundColor = bgColor;
-    }
   });
 }
 
