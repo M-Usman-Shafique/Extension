@@ -1,47 +1,17 @@
-I'm building a webpage bg color changer chrome extension using React.JS (vite). On selecting a color from bg color picker, the color of all the elements of a webpage changes including video thumbnails causing them to become invisible for the audience like at facebook, youtube etc. How to fix this issue?
-I already have tried the following methods:
-1. Selecting All HTML Elements & then filtering out the media related elements:
-function changeBackgroundColor(bgColor) {
-  // Select all elements on the page
-  const allElements = document.querySelectorAll("*");
+HTML Media Elements Exclusion Problem in React BG Color Changer Chrome Extension
+Intro.:
+I'm trying to build a basic "BG Color Changer Chrome Extension" using React.JS.
+Required Functionality:
+On selecting a color from the background color picker I want that color to instantly apply to all the elements of the webpage except the code & media related elements (like images, thumbnails, videos, of Facebook, YouTube etc.).
+# My Current Approach:
+Here's my file:
 
-  // Convert NodeList to an array
-  const allElementsArray = Array.from(allElements);
 
-  // Find media elements and their parents
-  const mediaElements = Array.from(
-    document.querySelectorAll("img, iframe, video, picture, source, canvas, embed, object")
-  );
+Problems:
+1. When I select a color from the background color picker, the selected background color instantly applies to all elements including code and media related elements (like images, videos, thumbnails etc.) and then after refreshing the page, code & media related elements are excluded from the background color along with some other non-code, non-media elements such as divs & anchor tags etc.
+2. Every time I reload the page, I experience a random inconsistent behavior (don't know how to explain it). Sometimes the background color is applying to all the elements including code & media related elements as well while at other times it excludes them along with some other non-code, non-media elements.
 
-  // Create a set of all media elements and their parents to exclude
-  const elementsToExclude = new Set(
-    mediaElements.flatMap((mediaElement) => [mediaElement, mediaElement.parentElement])
-  );
+What I tried:
+First, I attempted to select all the HTML elements whose background color I wanted to change by explicitly mentioning their names (e.g., body, div, span, button, input, etc.). However, this didn’t work, as many elements on websites like YouTube and Facebook remained uncolored despite naming them.
 
-  // Filter out media elements and their parents
-  const filteredElements = allElementsArray.filter(
-    (el) => !elementsToExclude.has(el)
-  );
-
-  // Debugging: log the filtered elements (optional)
-  console.log("Filtered Elements: ", filteredElements);
-
-  // Loop through the filtered elements and apply the background color
-  filteredElements.forEach((el) => {
-    el.style.backgroundColor = bgColor;
-  });
-}
-
-Problem: in this approach, on applying the bg color, color of every element of the webpage changes including media related elements as well.
-
-2. Selecting specific elements by manually mentioning their tag names:
-function changeBackgroundColor(bgColor) {
-  const allElements = document.querySelectorAll(
-    "body, html, div, p, span, h1, h2, h3, h4, h5, h6, br, tr, abbr, address, audio, source, aside, main, article, b, base, blockquote, caption, data, details, dialog, dl, dt, fieldset, embed, section, table, tbody, th, td, tfoot, thead, title, ul, ol, ui, form, label, input, textarea, select, optgroup, option, a, link, button, nav, menu, mark, header, footer, ytd-mini-guide-renderer"
-  );
-  allElements.forEach((el) => {
-    el.style.backgroundColor = bgColor;
-  });
-}
-Problem: on using this approach the media related elements (images, videos, thumbnails) remain excluded from bg color application but the bg color some non-media elements also remain unchanged. Moreover, this approach work very strangely. It behaves different on different websites. Similarly it starts behaving differently when a webpage is reloaded.
-Fix the issue.. And used a seamless approach that works consistently on all the webpages excluding media related elements (images, videos, thumbnails etc.) from being effected by the bg color. Here's the basic files of my extension:
+Next, I tried selecting all elements while excluding code and media-related elements, without applying any inline (!important) styling to the excluded elements. Unfortunately, this also failed, as selecting a color from the background color picker instantly applied it to all elements, without excluding code and media-related elements.

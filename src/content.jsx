@@ -55,23 +55,29 @@ function changeBackgroundColor(bgColor) {
 
   // Select media elements that we want to exclude
   const mediaElements = document.querySelectorAll(
-    "img, video, iframe, canvas, object, picture"
+    "img, video, iframe, canvas, object, picture, code"
   );
 
-  // Create a set of elements to exclude: media elements and their parents
+  // Create a set to store excluded elements (media elements + their parents)
   const excludedElements = new Set();
 
-  // Add media elements and their parents to the set
+  // Apply "transparent" background color to media elements and their parents
   mediaElements.forEach((mediaElement) => {
-    excludedElements.add(mediaElement); // Exclude the media element itself
-    if (mediaElement.parentElement) {
-      excludedElements.add(mediaElement.parentElement); // Exclude its parent container
+    if (!excludedElements.has(mediaElement)) {
+      mediaElement.style.setProperty(
+        "background-color",
+        "transparent",
+        "important"
+      );
+      excludedElements.add(mediaElement);
     }
   });
 
-  // Apply background color to all elements except those in the excluded set
+  // Apply the background color to non-excluded elements
   allElements.forEach((el) => {
-      el.style.backgroundColor = bgColor;
+    if (!excludedElements.has(el)) {
+      el.style.setProperty("background-color", bgColor, "important");
+    }
   });
 }
 

@@ -1,0 +1,84 @@
+// src/content.jsx
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "changeBgColor") {
+    changeBackgroundColor(message.bgColor);
+
+    // Store the selected color in Chrome storage
+    chrome.storage.local.set({ backgroundColor: message.bgColor }, () => {
+      console.log("Background color saved");
+    });
+
+    sendResponse({ success: true });
+  }
+  return true;
+});
+
+function changeBackgroundColor(bgColor) {
+  // All elements
+  const allElements = document.querySelectorAll("*");
+
+  // Media elements that we want to exclude
+  const mediaElements = document.querySelectorAll(
+    "img, video, iframe, canvas, object, picture, code"
+  );
+
+  // Set to store excluded elements
+  const excludedElements = new Set();
+
+  // Applying "transparent" bg color to media elements
+  mediaElements.forEach((mediaElement) => {
+    if (!excludedElements.has(mediaElement)) {
+      mediaElement.style.setProperty(
+        "background-color",
+        "transparent",
+        "important"
+      );
+      excludedElements.add(mediaElement);
+    }
+  });
+
+  // Applying new bg color to non-excluded elements
+  allElements.forEach((el) => {
+    if (!excludedElements.has(el)) {
+      el.style.setProperty("background-color", bgColor, "important");
+    }
+  });
+}
+
+// src/App.jsx
+export default function App() {
+  const [bgColor, setBgColor] = useState("#000000");
+
+  const changeBgColor = (color) => {
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach((tab) => {
+        chrome.tabs.sendMessage(
+          tab.id,
+          { action: "changeBgColor", bgColor: color },
+          (response) => {
+            if (chrome.runtime.lastError) {
+              console.error(chrome.runtime.lastError);
+            } else if (response && response.success) {
+              console.log("Bg color changed successfully");
+              chrome.storage.local.set({ backgroundColor: color });
+            }
+          }
+        );
+      });
+    });
+  };
+
+  return (
+    <div>
+      <input
+        type="color"
+        value={bgColor}
+        onChange={(e) => {
+          const selectedColor = e.target.value;
+          setBgColor(selectedColor);
+          changeBgColor(selectedColor);
+        }}
+      />
+    </div>
+  );
+}
