@@ -2,7 +2,6 @@
 export function changeBackgroundColor(bgColor) {
   const allElements = document.querySelectorAll("*");
 
-  // Selecting media elements to exclude
   const mediaElements = document.querySelectorAll(
     "img, video, iframe, canvas, picture, code"
   );
@@ -13,7 +12,6 @@ export function changeBackgroundColor(bgColor) {
     excludedElements.add(mediaElement);
   });
 
-  // Applying bg color to all elements except those in the excluded set
   allElements.forEach((el) => {
     if (!excludedElements.has(el)) {
       el.style.backgroundColor = bgColor;
