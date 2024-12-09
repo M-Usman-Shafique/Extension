@@ -1,17 +1,1 @@
-HTML Media Elements Exclusion Problem in React BG Color Changer Chrome Extension
-Intro.:
-I'm trying to build a basic "BG Color Changer Chrome Extension" using React.JS.
-Required Functionality:
-On selecting a color from the background color picker I want that color to instantly apply to all the elements of the webpage except the code & media related elements (like images, thumbnails, videos, of Facebook, YouTube etc.).
-# My Current Approach:
-Here's my file:
 
-
-Problems:
-1. When I select a color from the background color picker, the selected background color instantly applies to all elements including code and media related elements (like images, videos, thumbnails etc.) and then after refreshing the page, code & media related elements are excluded from the background color along with some other non-code, non-media elements such as divs & anchor tags etc.
-2. Every time I reload the page, I experience a random inconsistent behavior (don't know how to explain it). Sometimes the background color is applying to all the elements including code & media related elements as well while at other times it excludes them along with some other non-code, non-media elements.
-
-What I tried:
-First, I attempted to select all the HTML elements whose background color I wanted to change by explicitly mentioning their names (e.g., body, div, span, button, input, etc.). However, this didn’t work, as many elements on websites like YouTube and Facebook remained uncolored despite naming them.
-
-Next, I tried selecting all elements while excluding code and media-related elements, without applying any inline (!important) styling to the excluded elements. Unfortunately, this also failed, as selecting a color from the background color picker instantly applied it to all elements, without excluding code and media-related elements.
