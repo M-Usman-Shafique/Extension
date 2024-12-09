@@ -1,11 +1,15 @@
 /* eslint-disable no-undef */
-// src/App.jsx
 import { useEffect, useState, useRef } from "react";
-import { GrPowerReset } from "react-icons/gr";
-import "./App.css";
 import CustomizedSwitches from "./components/CustomizedSwitches";
+import { TbBackground } from "react-icons/tb";
+import { GrPowerReset } from "react-icons/gr";
 import { CiText } from "react-icons/ci";
-import { IoColorPaletteOutline } from "react-icons/io5";
+import "./App.css";
+import {
+  changeBgColor,
+  changeTextColor,
+  resetColors,
+} from "./utils/appUtils";
 
 export default function App() {
   const [bgColor, setBgColor] = useState("#000000");
@@ -27,7 +31,7 @@ export default function App() {
         }
       });
 
-      // Get the stored background color and apply it if enabled
+      // Getting & applying stored colors
       chrome.storage.local.get(["backgroundColor", "textColor"], (result) => {
         if (isEnabled) {
           if (result.backgroundColor) {
@@ -51,74 +55,11 @@ export default function App() {
     }
   }, [isChromeExtension, isEnabled]);
 
-  const changeBgColor = (color) => {
-    if (!isEnabled) return;
-
-    chrome.tabs.query({}, (tabs) => {
-      tabs.forEach((tab) => {
-        chrome.tabs.sendMessage(
-          tab.id,
-          { action: "changeBgColor", bgColor: color },
-          (response) => {
-            if (chrome.runtime.lastError) {
-              console.error(chrome.runtime.lastError);
-            } else if (response && response.success) {
-              console.log("Bg color changed successfully");
-              chrome.storage.local.set({ backgroundColor: color });
-            }
-          }
-        );
-      });
-    });
-  };
-
-  const changeTextColor = (color) => {
-    if (!isEnabled) return;
-
-    chrome.tabs.query({}, (tabs) => {
-      tabs.forEach((tab) => {
-        chrome.tabs.sendMessage(
-          tab.id,
-          { action: "changeTextColor", textColor: color },
-          (response) => {
-            if (chrome.runtime.lastError) {
-              console.error(chrome.runtime.lastError);
-            } else if (response && response.success) {
-              console.log("Text color changed successfully");
-              chrome.storage.local.set({ textColor: color });
-            }
-          }
-        );
-      });
-    });
-  };
-
-  const resetColors = () => {
-    setIsLoading(true);
-    chrome.tabs.query({}, (tabs) => {
-      tabs.forEach((tab) => {
-        chrome.tabs.sendMessage(
-          tab.id,
-          { action: "resetColors" },
-          (response) => {
-            if (chrome.runtime.lastError) {
-              console.error(chrome.runtime.lastError);
-            } else if (response && response.success) {
-              chrome.storage.local.remove(["backgroundColor", "textColor"]);
-              console.log("Colors reset successfully");
-              setIsLoading(false);
-            }
-          }
-        );
-      });
-    });
-  };
-
   const handleToggle = (checked) => {
     setIsEnabled(checked);
     chrome.storage.local.set({ isEnabled: checked });
 
-    // Query all open tabs and apply or disable the background color based on the toggle state
+    // Applying colors to all open tabs
     chrome.tabs.query({}, (tabs) => {
       if (checked) {
         chrome.storage.local.get(["backgroundColor", "textColor"], (result) => {
@@ -153,7 +94,7 @@ export default function App() {
         <CustomizedSwitches isEnabled={isEnabled} onToggle={handleToggle} />
         {isEnabled && (
           <button
-            onClick={resetColors}
+            onClick={() => resetColors(setIsLoading)}
             className="hover:bg-gray-800 group font-bold p-2 rounded-full"
           >
             <GrPowerReset
@@ -171,7 +112,7 @@ export default function App() {
               onClick={() => bgColorPickerRef.current.click()}
               className="w-12 h-12 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 p-2 rounded-full flex items-center justify-center"
             >
-              <IoColorPaletteOutline className="text-4xl text-white cursor-pointer" />
+              <TbBackground className="text-4xl text-white cursor-pointer" />
             </div>
             <input
               type="color"
@@ -180,7 +121,7 @@ export default function App() {
               onChange={(e) => {
                 const selectedColor = e.target.value;
                 setBgColor(selectedColor);
-                changeBgColor(selectedColor);
+                changeBgColor(selectedColor, isEnabled);
               }}
               className="hidden"
             />
@@ -199,7 +140,7 @@ export default function App() {
               onChange={(e) => {
                 const selectedColor = e.target.value;
                 setTextColor(selectedColor);
-                changeTextColor(selectedColor);
+                changeTextColor(selectedColor, isEnabled);
               }}
               className="hidden"
             />
