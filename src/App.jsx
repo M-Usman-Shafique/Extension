@@ -5,11 +5,7 @@ import { TbBackground } from "react-icons/tb";
 import { GrPowerReset } from "react-icons/gr";
 import { CiText } from "react-icons/ci";
 import "./App.css";
-import {
-  changeBgColor,
-  changeTextColor,
-  resetColors,
-} from "./utils/appUtils";
+import { changeBgColor, changeTextColor, resetColors } from "./utils/appUtils";
 
 export default function App() {
   const [bgColor, setBgColor] = useState("#000000");
@@ -89,16 +85,16 @@ export default function App() {
   };
 
   return (
-    <div className="px-4 pb-4 bg-gray-900 rounded-lg w-[300px] h-[200px] shadow-lg">
+    <div className="px-4 pb-4 w-[300px] h-[250px]">
       <div className="flex justify-between items-center">
         <CustomizedSwitches isEnabled={isEnabled} onToggle={handleToggle} />
         {isEnabled && (
           <button
             onClick={() => resetColors(setIsLoading)}
-            className="hover:bg-gray-800 group font-bold p-2 rounded-full"
+            className="hover:bg-white/10 group font-bold p-2 rounded-full"
           >
             <GrPowerReset
-              className={`text-slate-500 group-hover:text-slate-400 text-lg ${
+              className={`text-gray-500 group-hover:text-gray-300 text-lg ${
                 isLoading ? "animate-spin" : ""
               }`}
             />
@@ -106,7 +102,7 @@ export default function App() {
         )}
       </div>
       {isEnabled && (
-        <div className="flex justify-center gap-3 mb-4">
+        <div className="flex justify-center gap-10 py-8">
           <div className="relative">
             <div
               onClick={() => bgColorPickerRef.current.click()}
