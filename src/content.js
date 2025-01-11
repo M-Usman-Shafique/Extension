@@ -5,39 +5,51 @@ import {
   resetColors,
 } from "./utils/contUtils";
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "changeBgColor") {
-    chrome.storage.local.get("isEnabled", (result) => {
-      if (result.isEnabled) {
-        changeBackgroundColor(message.bgColor);
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  switch (message.action) {
+    case "changeBgColor":
+      chrome.storage.local.get("isEnabled", (result) => {
+        if (result.isEnabled) {
+          changeBackgroundColor(message.bgColor);
 
-        // Storing the selected background color in Chrome storage
-        chrome.storage.local.set({ backgroundColor: message.bgColor }, () => {
-          console.log("Background color saved");
-        });
+          // Storing the selected background color in Chrome storage
+          chrome.storage.local.set({ backgroundColor: message.bgColor }, () => {
+            console.log("Background color saved");
+          });
 
-        sendResponse({ success: true });
-      }
-    });
-  } else if (message.action === "changeTextColor") {
-    chrome.storage.local.get("isEnabled", (result) => {
-      if (result.isEnabled) {
-        changeTextColor(message.textColor);
+          sendResponse({ success: true });
+        }
+      });
+      break;
 
-        // Storing the selected text color in Chrome storage
-        chrome.storage.local.set({ textColor: message.textColor }, () => {
-          console.log("Text color saved");
-        });
+    case "changeTextColor":
+      chrome.storage.local.get("isEnabled", (result) => {
+        if (result.isEnabled) {
+          changeTextColor(message.textColor);
 
-        sendResponse({ success: true });
-      }
-    });
-  } else if (message.action === "disableColors") {
-    disableColors();
-    sendResponse({ success: true });
-  } else if (message.action === "resetColors") {
-    resetColors();
-    sendResponse({ success: true });
+          // Storing the selected text color in Chrome storage
+          chrome.storage.local.set({ textColor: message.textColor }, () => {
+            console.log("Text color saved");
+          });
+
+          sendResponse({ success: true });
+        }
+      });
+      break;
+
+    case "disableColors":
+      disableColors();
+      sendResponse({ success: true });
+      break;
+
+    case "resetColors":
+      resetColors();
+      sendResponse({ success: true });
+      break;
+
+    default:
+      console.warn(`Unhandled action: ${message.action}`);
+      break;
   }
   return true;
 });
