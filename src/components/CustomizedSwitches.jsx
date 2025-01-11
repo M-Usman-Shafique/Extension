@@ -2,7 +2,7 @@
 import { styled } from "@mui/material/styles";
 import FormGroup from "@mui/material/FormGroup";
 import Switch from "@mui/material/Switch";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
