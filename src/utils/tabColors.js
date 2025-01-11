@@ -3,10 +3,16 @@ import { sendMessageToAllTabs } from "./sendMsg";
 
 export const applyStoredColors = (backgroundColor, textColor) => {
   if (backgroundColor) {
-    sendMessageToAllTabs({ action: "changeBgColor", bgColor: backgroundColor });
+    sendMessageToAllTabs({
+      action: "changeBgColor",
+      bgColor: backgroundColor,
+    });
   }
   if (textColor) {
-    sendMessageToAllTabs({ action: "changeTextColor", textColor: textColor });
+    sendMessageToAllTabs({
+      action: "changeTextColor",
+      textColor: textColor,
+    });
   }
 };
 

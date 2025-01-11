@@ -1,6 +1,6 @@
 // src/App.jsx
 import { useState } from "react";
-import { TbBackground } from "react-icons/tb";
+import { PiPaintBrushHouseholdLight } from "react-icons/pi";
 import { CiText } from "react-icons/ci";
 import {
   changeBgColor,
@@ -50,7 +50,7 @@ export default function App() {
       {settings.isEnabled && (
         <div className="flex justify-center gap-10 py-8">
           <ColorPicker
-            icon={TbBackground}
+            icon={PiPaintBrushHouseholdLight}
             gradient="from-purple-400 via-pink-500 to-red-500"
             value={settings.bgColor}
             onChange={handleColorChange("bgColor")}

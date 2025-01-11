@@ -1,3 +1,4 @@
+// src/utils/sendMsg.js
 export const sendMessageToTab = (tabId, message) => {
   chrome.tabs.sendMessage(tabId, message, (response) => {
     if (chrome.runtime.lastError) {
