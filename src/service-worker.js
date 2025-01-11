@@ -1,4 +1,4 @@
-// src/background.js
+// src/service-worker.js
 chrome.runtime.onInstalled.addListener(() => {
   console.log("Color changer extension installed");
 

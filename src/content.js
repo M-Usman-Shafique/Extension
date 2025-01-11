@@ -1,5 +1,4 @@
 // src/content.js
-
 import {
   changeBackgroundColor,
   changeTextColor,
@@ -14,7 +13,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         if (result.isEnabled) {
           changeBackgroundColor(message.bgColor);
 
-          // Storing the selected background color in Chrome storage
+          // Storing the selected background color in Chrome storage:
           chrome.storage.local.set({ backgroundColor: message.bgColor }, () => {
             console.log("Background color saved");
           });
@@ -29,7 +28,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         if (result.isEnabled) {
           changeTextColor(message.textColor);
 
-          // Storing the selected text color in Chrome storage
+          // Storing the selected text color in Chrome storage:
           chrome.storage.local.set({ textColor: message.textColor }, () => {
             console.log("Text color saved");
           });
@@ -56,7 +55,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   return true;
 });
 
-// Getting & applying stored colors
+// Getting & applying stored colors:
 chrome.storage.local.get(
   ["backgroundColor", "textColor", "isEnabled"],
   (result) => {

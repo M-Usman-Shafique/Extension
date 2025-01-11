@@ -8,18 +8,20 @@
     "default_popup": "index.html",
     "default_icon": {
       "16": "nerd.png",
+      "32": "nerd.png",
       "48": "nerd.png",
       "128": "nerd.png"
     }
   },
   "icons": {
     "16": "nerd.png",
+    "32": "nerd.png",
     "48": "nerd.png",
     "128": "nerd.png"
   },
   "permissions": ["activeTab", "storage", "notifications"],
   "background": {
-    "service_worker": "src/background.js",
+    "service_worker": "src/service-worker.js",
     "type": "module"
   },
   "content_scripts": [

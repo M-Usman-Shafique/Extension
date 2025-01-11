@@ -1,5 +1,6 @@
 // src/hooks/useColorSettings.js
 import { useState, useEffect } from "react";
+import { applyStoredColors } from "../utils/tabColors";
 
 export const useColorSettings = () => {
   const [settings, setSettings] = useState({
