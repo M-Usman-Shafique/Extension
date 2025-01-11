@@ -1,10 +1,9 @@
-/* eslint-disable no-undef */
+// src/App.jsx
 import { useEffect, useState, useRef } from "react";
 import CustomizedSwitches from "./components/CustomizedSwitches";
 import { TbBackground } from "react-icons/tb";
 import { GrPowerReset } from "react-icons/gr";
 import { CiText } from "react-icons/ci";
-import "./App.css";
 import { changeBgColor, changeTextColor, resetColors } from "./utils/appUtils";
 
 export default function App() {

@@ -1,4 +1,4 @@
-// Change background color
+// src/utils.contUtils.js
 export function changeBackgroundColor(bgColor) {
   const allElements = document.querySelectorAll("*");
 
@@ -19,7 +19,6 @@ export function changeBackgroundColor(bgColor) {
   });
 }
 
-// Change text color
 export function changeTextColor(textColor) {
   const allElements = document.querySelectorAll("*");
   allElements.forEach((el) => {
@@ -27,7 +26,6 @@ export function changeTextColor(textColor) {
   });
 }
 
-// Disable background and text color
 export function disableColors() {
   const allElements = document.querySelectorAll("*");
   allElements.forEach((el) => {
@@ -36,7 +34,6 @@ export function disableColors() {
   });
 }
 
-// Reset background and text color
 export function resetColors() {
   const allElements = document.querySelectorAll("*");
   allElements.forEach((el) => {
@@ -44,7 +41,6 @@ export function resetColors() {
     el.style.color = "";
   });
 
-  // Clearing the colors stored in Chrome storage
   chrome.storage.local.remove(["backgroundColor", "textColor"], () => {
     console.log("Colors reset");
   });

@@ -1,5 +1,4 @@
-/* eslint-disable no-undef */
-
+// src/utils.appUtils.js
 export const changeBgColor = (color, isEnabled) => {
     if (!isEnabled) return;
   
