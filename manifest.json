@@ -17,15 +17,15 @@
     "48": "nerd.png",
     "128": "nerd.png"
   },
-  "permissions": ["activeTab", "storage"],
+  "permissions": ["activeTab", "storage", "notifications"],
   "background": {
-    "service_worker": "src/background.jsx",
+    "service_worker": "src/background.js",
     "type": "module"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["src/content.jsx"]
+      "js": ["src/content.js"]
     }
   ]
 }
