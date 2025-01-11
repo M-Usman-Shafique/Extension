@@ -18,35 +18,43 @@ export default function App() {
 
   useEffect(() => {
     if (isChromeExtension) {
-      chrome.storage.local.get("isEnabled", (result) => {
-        if (result.isEnabled !== undefined) {
-          setIsEnabled(result.isEnabled);
-        } else {
-          chrome.storage.local.set({ isEnabled: true });
-        }
-      });
+      chrome.storage.local.get(
+        ["isEnabled", "backgroundColor", "textColor"],
+        (result) => {
+          const { isEnabled, backgroundColor, textColor } = result;
 
-      // Getting & applying stored colors
-      chrome.storage.local.get(["backgroundColor", "textColor"], (result) => {
-        if (isEnabled) {
-          if (result.backgroundColor) {
-            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-              chrome.tabs.sendMessage(tabs[0].id, {
-                action: "changeBgColor",
-                bgColor: result.backgroundColor,
-              });
-            });
+          if (isEnabled === undefined) {
+            chrome.storage.local.set({ isEnabled: true });
           }
-          if (result.textColor) {
-            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-              chrome.tabs.sendMessage(tabs[0].id, {
-                action: "changeTextColor",
-                textColor: result.textColor,
-              });
-            });
+
+          setIsEnabled(isEnabled);
+
+          if (isEnabled) {
+            if (backgroundColor) {
+              chrome.tabs.query(
+                { active: true, currentWindow: true },
+                (tabs) => {
+                  chrome.tabs.sendMessage(tabs[0].id, {
+                    action: "changeBgColor",
+                    bgColor: backgroundColor,
+                  });
+                }
+              );
+            }
+            if (textColor) {
+              chrome.tabs.query(
+                { active: true, currentWindow: true },
+                (tabs) => {
+                  chrome.tabs.sendMessage(tabs[0].id, {
+                    action: "changeTextColor",
+                    textColor: textColor,
+                  });
+                }
+              );
+            }
           }
         }
-      });
+      );
     }
   }, [isChromeExtension, isEnabled]);
 
