@@ -51,13 +51,13 @@ export default function App() {
         <div className="flex justify-center gap-10 py-8">
           <ColorPicker
             icon={TbBackground}
-            gradientClasses="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500"
+            gradient="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500"
             value={settings.bgColor}
             onChange={handleColorChange("bgColor")}
           />
           <ColorPicker
             icon={CiText}
-            gradientClasses="bg-gradient-to-r from-green-400 via-blue-500 to-purple-500"
+            gradient="bg-gradient-to-r from-green-400 via-blue-500 to-purple-500"
             value={settings.textColor}
             onChange={handleColorChange("textColor")}
           />
