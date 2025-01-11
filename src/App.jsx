@@ -1,4 +1,3 @@
-// src/App.jsx
 import { useEffect, useState, useRef } from "react";
 import CustomizedSwitches from "./components/CustomizedSwitches";
 import { TbBackground } from "react-icons/tb";
@@ -7,9 +6,11 @@ import { CiText } from "react-icons/ci";
 import { changeBgColor, changeTextColor, resetColors } from "./utils/appUtils";
 
 export default function App() {
-  const [bgColor, setBgColor] = useState("#000000");
-  const [textColor, setTextColor] = useState("#000000");
-  const [isEnabled, setIsEnabled] = useState(true);
+  const [settings, setSettings] = useState({
+    isEnabled: true,
+    bgColor: "#000000",
+    textColor: "#000000"
+  });
   const [isLoading, setIsLoading] = useState(false);
   const bgColorPickerRef = useRef(null);
   const textColorPickerRef = useRef(null);
@@ -27,7 +28,10 @@ export default function App() {
             chrome.storage.local.set({ isEnabled: true });
           }
 
-          setIsEnabled(isEnabled);
+          setSettings(prev => ({
+            ...prev,
+            isEnabled: isEnabled ?? true
+          }));
 
           if (isEnabled) {
             if (backgroundColor) {
@@ -56,10 +60,13 @@ export default function App() {
         }
       );
     }
-  }, [isChromeExtension, isEnabled]);
+  }, [isChromeExtension, settings.isEnabled]);
 
   const handleToggle = (checked) => {
-    setIsEnabled(checked);
+    setSettings(prev => ({
+      ...prev,
+      isEnabled: checked
+    }));
     chrome.storage.local.set({ isEnabled: checked });
 
     // Applying colors to all open tabs
@@ -91,11 +98,28 @@ export default function App() {
     });
   };
 
+  const handleColorChange = (colorType) => (e) => {
+    const selectedColor = e.target.value;
+    setSettings(prev => ({
+      ...prev,
+      [colorType]: selectedColor
+    }));
+    
+    if (colorType === 'bgColor') {
+      changeBgColor(selectedColor, settings.isEnabled);
+    } else {
+      changeTextColor(selectedColor, settings.isEnabled);
+    }
+  };
+
   return (
     <div className="px-4 pb-4 w-[300px] h-[250px]">
       <div className="flex justify-between items-center">
-        <CustomizedSwitches isEnabled={isEnabled} onToggle={handleToggle} />
-        {isEnabled && (
+        <CustomizedSwitches 
+          isEnabled={settings.isEnabled} 
+          onToggle={handleToggle} 
+        />
+        {settings.isEnabled && (
           <button
             onClick={() => resetColors(setIsLoading)}
             className="hover:bg-white/10 group font-bold p-2 rounded-full"
@@ -108,7 +132,7 @@ export default function App() {
           </button>
         )}
       </div>
-      {isEnabled && (
+      {settings.isEnabled && (
         <div className="flex justify-center gap-10 py-8">
           <div className="relative">
             <div
@@ -120,12 +144,8 @@ export default function App() {
             <input
               type="color"
               ref={bgColorPickerRef}
-              value={bgColor}
-              onChange={(e) => {
-                const selectedColor = e.target.value;
-                setBgColor(selectedColor);
-                changeBgColor(selectedColor, isEnabled);
-              }}
+              value={settings.bgColor}
+              onChange={handleColorChange('bgColor')}
               className="hidden"
             />
           </div>
@@ -139,12 +159,8 @@ export default function App() {
             <input
               type="color"
               ref={textColorPickerRef}
-              value={textColor}
-              onChange={(e) => {
-                const selectedColor = e.target.value;
-                setTextColor(selectedColor);
-                changeTextColor(selectedColor, isEnabled);
-              }}
+              value={settings.textColor}
+              onChange={handleColorChange('textColor')}
               className="hidden"
             />
           </div>
