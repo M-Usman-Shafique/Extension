@@ -2,11 +2,15 @@
 import { useState } from "react";
 import { TbBackground } from "react-icons/tb";
 import { CiText } from "react-icons/ci";
-import { changeBgColor, changeTextColor, resetColors } from "./utils/appUtils";
+import {
+  changeBgColor,
+  changeTextColor,
+  resetColors,
+} from "./utils/colorActions";
 import { useColorSettings } from "./hooks/useColorSettings";
 import { ColorPicker } from "./components/ColorPicker";
 import { Header } from "./components/Header";
-import { applyToAllTabs } from "./utils/chromeUtils";
+import { applyToAllTabs } from "./utils/tabColors";
 
 export default function App() {
   const [settings, setSettings] = useColorSettings();
