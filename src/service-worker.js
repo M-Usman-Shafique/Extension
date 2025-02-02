@@ -1,6 +1,6 @@
 // src/service-worker.js
 chrome.runtime.onInstalled.addListener(() => {
-  console.log("Color changer extension installed");
+  console.log("Chrome extension installed");
 
   const notifOptions = {
     type: "basic",
